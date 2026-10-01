@@ -1,0 +1,218 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-display: 'Syne', sans-serif;
+    --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --font-hand: 'Caveat', cursive;
+  }
+
+  html {
+    font-family: var(--font-sans);
+    background-color: #08090D;
+    color: #F8FAFC;
+    scroll-behavior: smooth;
+  }
+
+  h1, h2, h3, .font-display {
+    font-family: var(--font-display);
+  }
+
+  code, pre, .font-mono {
+    font-family: var(--font-mono);
+  }
+
+  .font-hand {
+    font-family: var(--font-hand);
+  }
+}
+
+@keyframes marqueeScroll {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes floatSlow {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(0, -10px, 0) rotate(1.5deg);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 0.45;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.04);
+  }
+}
+
+@keyframes spinSlow {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marqueeScroll 32s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+.animate-float-slow {
+  animation: floatSlow 6s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 5s ease-in-out infinite;
+}
+
+.animate-spin-slow {
+  animation: spinSlow 8s linear infinite;
+}
+
+/* Signature Interactive Button Animations */
+.btn-cyber-lime {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 0.2s ease;
+}
+
+.btn-cyber-lime::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 75%;
+  height: 100%;
+  background: linear-gradient(
+    115deg,
+    transparent,
+    rgba(255, 255, 255, 0.65),
+    transparent
+  );
+  transform: skewX(-20deg);
+  transition: left 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+.btn-cyber-lime:hover {
+  transform: translate3d(0, -3px, 0) scale(1.03);
+  box-shadow: 0 12px 34px rgba(163, 230, 53, 0.48), 0 0 12px rgba(163, 230, 53, 0.6);
+}
+
+.btn-cyber-lime:hover::before {
+  left: 140%;
+}
+
+.btn-cyber-lime:active {
+  transform: translate3d(0, 1px, 0) scale(0.96);
+}
+
+.btn-cyber-purple {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 0.2s ease;
+}
+
+.btn-cyber-purple::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 75%;
+  height: 100%;
+  background: linear-gradient(
+    115deg,
+    transparent,
+    rgba(6, 182, 212, 0.45),
+    rgba(255, 255, 255, 0.35),
+    transparent
+  );
+  transform: skewX(-20deg);
+  transition: left 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+.btn-cyber-purple:hover {
+  transform: translate3d(0, -3px, 0) scale(1.03);
+  box-shadow: 0 12px 34px rgba(139, 92, 246, 0.5), 0 0 14px rgba(6, 182, 212, 0.45);
+}
+
+.btn-cyber-purple:hover::before {
+  left: 140%;
+}
+
+.btn-cyber-purple:active {
+  transform: translate3d(0, 1px, 0) scale(0.96);
+}
+
+.btn-cyber-ghost {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.22s ease,
+              box-shadow 0.22s ease,
+              background-color 0.22s ease;
+}
+
+.btn-cyber-ghost:hover {
+  transform: translate3d(0, -2px, 0) scale(1.02);
+  border-color: rgba(163, 230, 53, 0.65);
+  box-shadow: 0 8px 24px rgba(6, 182, 212, 0.18);
+}
+
+.btn-cyber-ghost:active {
+  transform: translate3d(0, 1px, 0) scale(0.96);
+}
+
+/* Subtle engineering grid background */
+.bg-subtle-grid {
+  background-size: 48px 48px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.028) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.028) 1px, transparent 1px);
+}
+
+/* Subtle CRT scanline effect for Game Dev showcase */
+.bg-scanlines {
+  background: linear-gradient(
+    to bottom,
+    rgba(255,255,255,0),
+    rgba(255,255,255,0) 50%,
+    rgba(0, 0, 0, 0.28) 50%,
+    rgba(0, 0, 0, 0.28)
+  );
+  background-size: 100% 4px;
+}
+
+/* Reduced motion accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
