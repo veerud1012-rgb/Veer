@@ -1,27 +1,30 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowRight, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
+import { ArrowRight, CheckCircle2, AlertCircle, Loader2, Mail, MessageSquare, Send } from 'lucide-react';
 
 interface ContactFormProps {
   initialProjectType?: string;
 }
 
 const PROJECT_TYPES = ['Website', 'Web App', 'Game', 'Other'];
-const BUDGET_RANGES = [
-  'Under $500 / ₹25k–₹40k',
-  '$500 – $1,500 / ₹40k–₹1.2L',
-  '$1,500 – $3,000+ / Custom Scope',
-  'Let’s discuss based on requirements',
-];
+const WHATSAPP_PHONE = '919953575628';
+const TARGET_EMAIL = 'veer.ud.1012@gmail.com';
 
 export function ContactForm({ initialProjectType }: ContactFormProps) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [projectType, setProjectType] = useState(initialProjectType || 'Website');
-  const [budget, setBudget] = useState(BUDGET_RANGES[0]);
   const [message, setMessage] = useState('');
 
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
+  const [lastSubmitted, setLastSubmitted] = useState<{
+    name: string;
+    email: string;
+    projectType: string;
+    message: string;
+    whatsappUrl: string;
+    mailtoUrl: string;
+  } | null>(null);
 
   useEffect(() => {
     if (initialProjectType && PROJECT_TYPES.includes(initialProjectType)) {
@@ -33,48 +36,129 @@ export function ContactForm({ initialProjectType }: ContactFormProps) {
     e.preventDefault();
     setErrorMessage('');
 
-    if (name.trim().length < 2) {
+    const trimmedName = name.trim();
+    if (trimmedName.length < 2) {
       setStatus('error');
       setErrorMessage('Please enter your name (at least 2 characters).');
       return;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email.trim())) {
+    const trimmedEmail = email.trim();
+    if (!emailRegex.test(trimmedEmail)) {
       setStatus('error');
       setErrorMessage('Please enter a valid email address so I can reply.');
       return;
     }
 
-    if (message.trim().length < 10) {
+    const trimmedMessage = message.trim();
+    if (trimmedMessage.length < 10) {
       setStatus('error');
       setErrorMessage('Please share a brief description of your project (at least 10 characters).');
       return;
     }
 
     setStatus('loading');
+
+    // Build formatted inquiry content
+    const subject = `New Project Inquiry: ${projectType} from ${trimmedName}`;
+    const formattedBody = `Hi Udayveer,
+
+I would like to discuss a project with you:
+
+• Name: ${trimmedName}
+• Email: ${trimmedEmail}
+• Project Type: ${projectType}
+
+Project Details & Goals:
+${trimmedMessage}
+
+(Sent via Veyro Portfolio inquiry form)`;
+
+    const whatsappUrl = `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(formattedBody)}`;
+    const mailtoUrl = `mailto:${TARGET_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(formattedBody)}`;
+
+    setLastSubmitted({
+      name: trimmedName,
+      email: trimmedEmail,
+      projectType,
+      message: trimmedMessage,
+      whatsappUrl,
+      mailtoUrl,
+    });
+
+    // Send inquiry to both WhatsApp and Email simultaneously
     setTimeout(() => {
+      // 1. Open WhatsApp chat with pre-filled message
+      try {
+        window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+      } catch (err) {
+        console.warn('Could not auto-open WhatsApp:', err);
+      }
+
+      // 2. Open Email client with pre-filled subject and body
+      try {
+        window.location.href = mailtoUrl;
+      } catch (err) {
+        console.warn('Could not auto-trigger mailto:', err);
+      }
+
       setStatus('success');
-    }, 650);
+    }, 600);
   };
 
-  if (status === 'success') {
+  if (status === 'success' && lastSubmitted) {
     return (
-      <div className="rounded-3xl bg-[#0D1017] border border-[#A3E635]/50 p-8 sm:p-10 shadow-2xl space-y-5">
-        <div className="w-12 h-12 rounded-2xl bg-[#A3E635]/15 text-[#A3E635] flex items-center justify-center">
-          <CheckCircle2 className="w-6 h-6" />
+      <div className="rounded-3xl bg-[#0D1017] border border-[#A3E635]/60 p-7 sm:p-10 shadow-[0_0_40px_rgba(163,230,53,0.15)] space-y-6">
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 rounded-2xl bg-[#A3E635]/15 text-[#A3E635] flex items-center justify-center shadow-[0_0_20px_rgba(163,230,53,0.3)]">
+            <CheckCircle2 className="w-6 h-6" />
+          </div>
+          <div>
+            <span className="font-mono text-xs text-[#A3E635] font-semibold tracking-wider">
+              INQUIRY DISPATCHED
+            </span>
+            <h3 className="font-display text-2xl sm:text-3xl font-extrabold text-white">
+              Sent to Email &amp; WhatsApp!
+            </h3>
+          </div>
         </div>
-        <h3 className="font-display text-2xl sm:text-3xl font-extrabold text-white">
-          Project Inquiry Received!
-        </h3>
+
         <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
-          Thank you, <strong className="text-white">{name}</strong>. Your inquiry for a{' '}
-          <span className="text-[#A3E635] font-semibold">{projectType}</span> project ({budget}) is ready.
+          Thank you, <strong className="text-white">{lastSubmitted.name}</strong>. Your project inquiry has been prepared and routed to Udayveer on both <strong className="text-[#A3E635]">Email</strong> and <strong className="text-[#25D366]">WhatsApp</strong>.
         </p>
-        <div className="p-4 rounded-xl bg-[#08090D] border border-white/10 font-mono text-xs text-slate-300 space-y-1">
-          <div>REPLY-TO: {email}</div>
-          <div>SCOPE: {projectType} · 5-Day Express Assessment</div>
+
+        {/* 1-Click Direct Links to re-open or confirm on both channels */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+          <a
+            href={lastSubmitted.whatsappUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-4 py-3 rounded-xl bg-[#25D366] hover:bg-[#20be5a] text-[#08090D] font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(37,211,102,0.35)] transition-all duration-150 hover:-translate-y-0.5 whitespace-nowrap"
+          >
+            <MessageSquare className="w-4 h-4 fill-current" />
+            <span>Open in WhatsApp (9953575628)</span>
+          </a>
+
+          <a
+            href={lastSubmitted.mailtoUrl}
+            className="px-4 py-3 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 text-white font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all duration-150 hover:-translate-y-0.5 whitespace-nowrap"
+          >
+            <Mail className="w-4 h-4 text-[#A3E635]" />
+            <span>Open in Email ({TARGET_EMAIL})</span>
+          </a>
         </div>
+
+        <div className="p-4 rounded-xl bg-[#08090D] border border-white/10 font-mono text-xs text-slate-300 space-y-1.5">
+          <div className="text-slate-400">INQUIRY SUMMARY:</div>
+          <div><span className="text-slate-500">NAME:</span> {lastSubmitted.name}</div>
+          <div><span className="text-slate-500">EMAIL:</span> {lastSubmitted.email}</div>
+          <div><span className="text-slate-500">PROJECT TYPE:</span> {lastSubmitted.projectType}</div>
+          <div className="pt-1 text-slate-400 border-t border-white/5 line-clamp-2">
+            <span className="text-slate-500">DETAILS:</span> &ldquo;{lastSubmitted.message}&rdquo;
+          </div>
+        </div>
+
         <button
           type="button"
           onClick={() => {
@@ -82,8 +166,9 @@ export function ContactForm({ initialProjectType }: ContactFormProps) {
             setName('');
             setEmail('');
             setMessage('');
+            setLastSubmitted(null);
           }}
-          className="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-white text-sm font-semibold transition-colors cursor-pointer"
+          className="px-5 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 hover:text-white text-xs sm:text-sm font-semibold transition-colors cursor-pointer"
         >
           Send Another Inquiry
         </button>
@@ -103,7 +188,7 @@ export function ContactForm({ initialProjectType }: ContactFormProps) {
             Start a Project Inquiry
           </h3>
           <p className="text-xs sm:text-sm text-slate-400 mt-0.5">
-            Fill out the brief below — I respond within 24 hours.
+            Sends directly to my Email &amp; WhatsApp for immediate review.
           </p>
         </div>
         <span className="font-mono text-xs text-[#A3E635]">5-DAY READY</span>
@@ -177,26 +262,7 @@ export function ContactForm({ initialProjectType }: ContactFormProps) {
         </div>
       </div>
 
-      {/* Budget Range */}
-      <div>
-        <label htmlFor="contact-budget" className="block text-xs font-mono text-slate-300 mb-1.5">
-          BUDGET RANGE
-        </label>
-        <select
-          id="contact-budget"
-          value={budget}
-          onChange={(e) => setBudget(e.target.value)}
-          className="w-full px-4 py-3 rounded-xl bg-[#08090D] border border-white/10 focus:border-[#A3E635] focus:outline-none text-white text-sm transition-colors"
-        >
-          {BUDGET_RANGES.map((range) => (
-            <option key={range} value={range} className="bg-[#0D1017] text-white">
-              {range}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      {/* Message */}
+      {/* Message / Project Details (Budget range removed as requested) */}
       <div>
         <label htmlFor="contact-message" className="block text-xs font-mono text-slate-300 mb-1.5">
           PROJECT DETAILS &amp; GOALS *
@@ -212,6 +278,12 @@ export function ContactForm({ initialProjectType }: ContactFormProps) {
         />
       </div>
 
+      {/* Dual Email & WhatsApp dispatch note */}
+      <div className="flex items-center gap-2 text-xs font-mono text-slate-400">
+        <Send className="w-3.5 h-3.5 text-[#A3E635]" />
+        <span>Dispatches simultaneously to Email &amp; WhatsApp (+91 9953575628)</span>
+      </div>
+
       <button
         type="submit"
         disabled={status === 'loading'}
@@ -220,7 +292,7 @@ export function ContactForm({ initialProjectType }: ContactFormProps) {
         {status === 'loading' ? (
           <>
             <Loader2 className="w-4 h-4 animate-spin" />
-            <span>Preparing Inquiry...</span>
+            <span>Routing to Email &amp; WhatsApp...</span>
           </>
         ) : (
           <>

@@ -117,7 +117,7 @@ export function Hero() {
             <div className="relative">
               <div className="flex items-center gap-1.5 sm:gap-2 mb-0.5 sm:mb-1">
                 <span className="font-hand text-2xl sm:text-4xl text-slate-200 -rotate-3 inline-block">
-                  {PORTFOLIO_DATA.personal.greeting}
+                  Hey, I am
                 </span>
                 <HandDrawnArrow className="w-5 h-5 sm:w-8 sm:h-8 text-[#A3E635] rotate-12" />
               </div>

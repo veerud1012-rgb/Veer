@@ -13,7 +13,7 @@ export function Footer() {
               href="#home"
               className="font-display text-2xl font-extrabold tracking-tight text-white inline-block"
             >
-              UDAYVEER<span className="text-[#A3E635]">.</span>
+              VEYRO<span className="text-[#A3E635]">.</span>
             </a>
             <div className="text-xs sm:text-sm font-medium text-slate-300">
               Website Developer · Game Developer
@@ -106,7 +106,7 @@ export function Footer() {
 
         {/* Bottom Copyright Bar */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
-          <p>© 2026 {PORTFOLIO_DATA.personal.displayName}. All rights reserved.</p>
+          <p>© 2026 Veyro. All rights reserved.</p>
           <p className="text-slate-400">Built with creativity &amp; code.</p>
         </div>
       </div>

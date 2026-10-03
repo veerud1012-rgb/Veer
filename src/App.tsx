@@ -7,6 +7,7 @@ import React, { useState, useEffect } from 'react';
 import { CustomCursor } from './components/CustomCursor';
 import { ScrollProgress } from './components/ScrollProgress';
 import { ScrollReveal } from './components/ScrollReveal';
+import { FloatingWhatsApp } from './components/FloatingWhatsApp';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { Stats } from './components/Stats';
@@ -68,6 +69,7 @@ export default function App() {
     <div className="min-h-screen bg-[#08090D] text-[#F8FAFC] relative selection:bg-[#A3E635] selection:text-[#08090D]">
       <CustomCursor />
       <ScrollProgress />
+      <FloatingWhatsApp />
       <Navbar activeSection={activeSection} />
 
       <main>

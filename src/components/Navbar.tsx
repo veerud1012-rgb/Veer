@@ -76,7 +76,7 @@ export function Navbar({ activeSection }: NavbarProps) {
             onClick={handleLogoClick}
             className="font-display text-xl sm:text-2xl font-extrabold tracking-tight text-white hover:text-[#A3E635] transition-colors whitespace-nowrap shrink-0"
           >
-            UDAYVEER<span className="text-[#A3E635]">.</span>
+            VEYRO<span className="text-[#A3E635]">.</span>
           </a>
 
           {/* Zone 2: Clean text navigation links with animated active underline */}
